@@ -9,8 +9,10 @@ import { ArrowLeft, Mic, MicOff, Pause, Play, Send } from 'lucide-react-native';
 import React, { useEffect, useRef, useState } from 'react';
 
 // Suggested code may be subject to a license. Learn more: ~LicenseLog:2510578202.
+import { AudioModule, RecordingPresets, useAudioRecorder } from 'expo-audio';
 import {
   ActivityIndicator,
+  Alert,
   Image,
   KeyboardAvoidingView,
   Platform,
@@ -24,7 +26,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function ChatScreen() {
-  const router = useRouter();
+  const router = useRouter();  
   const params = useLocalSearchParams();
   const deityId = params.deity as string;
   const [selectedDeity, setSelectedDeity] = useState(deities[0]);
@@ -38,8 +40,30 @@ export default function ChatScreen() {
   const scrollViewRef = useRef<ScrollView>(null);
   const insets = useSafeAreaInsets();
 
-  useEffect(() => {
+  const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
+  // const [isRecording, setIsRecording] = useState(false);
 
+  // const startRecording = async () => {
+  //   await audioRecorder.prepareToRecordAsync();
+  //   audioRecorder.record();
+  //   setIsRecording(true);
+  // }
+  // const stopRecording = async () => {
+  //   // The recording will be available on `audioRecorder.uri`.
+  //   await audioRecorder.stop();
+  //   setIsRecording(false);
+  // };
+  
+  useEffect(() => {
+    (async () => {
+      const status = await AudioModule.requestRecordingPermissionsAsync();
+      if (!status.granted) {
+        Alert.alert('Permission to access microphone was denied');
+      }
+    })();
+  }, []);
+  
+  useEffect(() => {
     const initalized = async ()=>{
       if (deityId) {
         const deity = deities.find(d => d.id === deityId);
@@ -80,9 +104,12 @@ export default function ChatScreen() {
     };
   }, [deityId]);
 
+
   useEffect(() => {
     scrollToBottom();
   }, [conversation]);
+
+
 
   const scrollToBottom = () => {
     if (scrollViewRef.current) {
@@ -161,6 +188,7 @@ export default function ChatScreen() {
     setIsRecording(false);
     await recording.stopAndUnloadAsync();
     const uri = recording.getURI();
+    console.log('URI', uri);
     setRecording(null);
 
     if (uri) {

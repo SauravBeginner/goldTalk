@@ -49,9 +49,15 @@ export default function HomeScreen() {
   });
 
   const navigateToChat = (deity : any) => {
+    console.warn('Navigating to record for deity:', deity); // Add this line
     router.push({
-      pathname: '/chat',
-      params: { deity: deity.id }
+      // pathname: '/chat',
+      pathname: '/(routes)/record',
+      params: {
+        deityName: deity.name,
+        deityTitle: deity.title,
+        deityOrigin: deity.origin,
+      },
     });
   };
 

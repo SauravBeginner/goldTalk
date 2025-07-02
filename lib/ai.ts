@@ -1,7 +1,7 @@
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI } from '@google/genai/web';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import Constants from 'expo-constants'; // For local dev API key
-const GEMINI_API_KEY = Constants.expoConfig?.extra?.apiKey || process.env.GEMINI_API_KEY ;
+const GEMINI_API_KEY = Constants.expoConfig?.extra?.apiKey || process.env.EXPO_PUBLIC_GOOGLE_API_KEY;
 
 const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
 
