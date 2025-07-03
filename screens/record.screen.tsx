@@ -242,6 +242,7 @@ export default function HomeScreen() {
               position: "absolute",
               top: verticalScale(50),
               left: scale(20),
+              zIndex: 10, // Add zIndex here as well
             }}
             onPress={() => {
               Speech.stop();
@@ -290,7 +291,7 @@ export default function HomeScreen() {
                 ref={lottieRef}
                 source={require("@/assets/animations/ai-speaking.json")}
                 autoPlay={false}
-                loop={false}
+                loop
                 style={{ width: scale(250), height: scale(250) }}
               />
             </View>
